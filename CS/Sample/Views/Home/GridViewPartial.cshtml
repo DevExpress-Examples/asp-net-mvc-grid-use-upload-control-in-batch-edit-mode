@@ -1,0 +1,35 @@
+﻿@Html.DevExpress().GridView(settings => {
+    settings.Name = "gridView";
+    settings.CallbackRouteValues = new { Controller = "Home", Action = "GridViewPartial" };
+    settings.SettingsEditing.BatchUpdateRouteValues = new { Controller = "Home", Action = "GridViewBatchUpdate" };
+
+    settings.KeyFieldName = "ID";
+    settings.SettingsEditing.Mode = GridViewEditingMode.Batch;
+
+    settings.Columns.Add("ID").ReadOnly = true;
+    settings.Columns.Add("PersonName");
+    settings.Columns.Add(c => {
+        c.FieldName = "FileName";
+        c.Width = 200;
+        c.SetEditItemTemplateContent(container => {
+            Html.DevExpress().UploadControl(ucSettings => {
+                ucSettings.Name = "uc";
+                ucSettings.CallbackRouteValues = new { Controller = "Home", Action = "UploadControlUploadFile" };
+                ucSettings.UploadMode = UploadControlUploadMode.Advanced;
+                ucSettings.Width = Unit.Percentage(100);
+                ucSettings.ClientSideEvents.TextChanged = "OnTextChanged";
+                ucSettings.ClientSideEvents.FileUploadComplete = "OnFileUploadComplete";
+            }).Render();
+        });
+    });
+
+
+    settings.BeforeGetCallbackResult += (s, e) => {
+        Sample.Models.Helper.Files.Clear();
+    };
+
+    settings.ClientSideEvents.BatchEditStartEditing = "OnBatchStartEditing";
+    settings.ClientSideEvents.BatchEditConfirmShowing = "OnBatchConfirm";
+    settings.ClientSideEvents.BatchEditEndEditing = "OnBatchEditEndEditing";
+    
+}).Bind(Model).GetHtml()
