@@ -1,3 +1,11 @@
+<!-- default file list -->
+*Files to look at*:
+
+* [HomeController.cs](./CS/Sample/Controllers/HomeController.cs) (VB: [HomeController.vb](./VB/Sample/Controllers/HomeController.vb))
+* [Model.cs](./CS/Sample/Models/Model.cs) (VB: [Model.vb](./VB/Sample/Models/Model.vb))
+* [GridViewPartial.cshtml](./CS/Sample/Views/Home/GridViewPartial.cshtml)
+* **[Index.cshtml](./CS/Sample/Views/Home/Index.cshtml)**
+<!-- default file list end -->
 # GridView - Batch Edit - How to use the upload control in Batch Edit mode
 
 
