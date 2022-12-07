@@ -4,7 +4,7 @@ Imports System.Collections.Generic
 Imports System.Linq
 Imports System.Web
 Imports System.Web.Mvc
-Imports DevExpress.Web.ASPxUploadControl
+Imports DevExpress.Web
 Imports DevExpress.Web.Mvc
 Imports Sample.Models
 
