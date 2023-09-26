@@ -14,77 +14,76 @@ Follow the steps below:
 
 1. Place an upload control to a column's edit item template:
 
-```cs
-c.SetEditItemTemplateContent(container => {
-    Html.DevExpress().UploadControl(ucSettings => {
-        ucSettings.Name = "uc";
-        ucSettings.CallbackRouteValues = new { Controller = "Home", Action = "UploadControlUploadFile" };
-        ucSettings.UploadMode = UploadControlUploadMode.Advanced;
-        ucSettings.Width = Unit.Percentage(100);
-        ucSettings.ClientSideEvents.TextChanged = "OnTextChanged";
-        ucSettings.ClientSideEvents.FileUploadComplete = "OnFileUploadComplete";
-    }).Render();
-});
-```
+    ```cs
+    c.SetEditItemTemplateContent(container => {
+        Html.DevExpress().UploadControl(ucSettings => {
+            ucSettings.Name = "uc";
+            ucSettings.CallbackRouteValues = new { Controller = "Home", Action = "UploadControlUploadFile" };
+            ucSettings.UploadMode = UploadControlUploadMode.Advanced;
+            ucSettings.Width = Unit.Percentage(100);
+            ucSettings.ClientSideEvents.TextChanged = "OnTextChanged";
+            ucSettings.ClientSideEvents.FileUploadComplete = "OnFileUploadComplete";
+        }).Render();
+    });
+    ```
 
 2. Handle the grid's client-side [BatchEditStartEditing](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.BatchEditStartEditing) event to set the grid's cell values to the upload control. Use the [rowValues](https://docs.devexpress.com/AspNet/js-ASPxClientGridViewBatchEditStartEditingEventArgs.rowValues) argument property to get the focused cell value:
 
-```js
-function OnBatchStartEditing(s, e) {
-    browseClicked = false;
-    $("#hf").val(e.visibleIndex);
-    var fileNameColumn = s.GetColumnByField("FileName");
-    if (!e.rowValues.hasOwnProperty(fileNameColumn.index))
-        return;
-    var cellInfo = e.rowValues[fileNameColumn.index];
-
-    setTimeout(function () {
-        SetUCText(cellInfo.value);
-    }, 0);
-}
-```
+    ```js
+    function OnBatchStartEditing(s, e) {
+        browseClicked = false;
+        $("#hf").val(e.visibleIndex);
+        var fileNameColumn = s.GetColumnByField("FileName");
+        if (!e.rowValues.hasOwnProperty(fileNameColumn.index))
+            return;
+        var cellInfo = e.rowValues[fileNameColumn.index];
+    
+        setTimeout(function () {
+            SetUCText(cellInfo.value);
+        }, 0);
+    }
+    ```
 
 3. Handle the grid's client-side [BatchEditConfirmShowing](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.BatchEditConfirmShowing) event to prevent data loss on the upload control's callbacks:
 
-```js
-function OnBatchConfirm(s, e) {
-    e.cancel = browseClicked;
-}
-```
+    ```js
+    function OnBatchConfirm(s, e) {
+        e.cancel = browseClicked;
+    }
+    ```
 
 4. Handle the upload control's client-side `TextChanged` and `FileUploadComplete` events to automatically upload the selected file and update the cell value after:
 
-```js
-function OnFileUploadComplete(s, e) {
-    gridView.batchEditApi.SetCellValue($("#hf").val(), "FileName", e.callbackData);
-    gridView.batchEditApi.EndEdit();
-}
-function OnTextChanged(s, e) {
-    if (s.GetText()) {
-        browseClicked = true;
-        s.Upload();
+    ```js
+    function OnFileUploadComplete(s, e) {
+        gridView.batchEditApi.SetCellValue($("#hf").val(), "FileName", e.callbackData);
+        gridView.batchEditApi.EndEdit();
     }
-}
-
-```
+    function OnTextChanged(s, e) {
+        if (s.GetText()) {
+            browseClicked = true;
+            s.Upload();
+        }
+    }
+    ```
 
 5. Handle the upload control's `FileUploadComplete` event to store the uploaded file in the session:
 
-```cs
-public ActionResult UploadControlUploadFile() {            
-    var visibleIndex = Convert.ToInt32(Request.Params["hf"]);
-    UploadControlExtension.GetUploadedFiles("uc", null, (s,e) => {
-        var name = e.UploadedFile.FileName;
-        e.CallbackData = name;
-
-        if (Helper.Files.ContainsKey(visibleIndex))
-            Helper.Files[visibleIndex] = e.UploadedFile.FileBytes;
-        else
-            Helper.Files.Add(visibleIndex, e.UploadedFile.FileBytes);
-    });
-    return null;
-}
-```
+    ```cs
+    public ActionResult UploadControlUploadFile() {            
+        var visibleIndex = Convert.ToInt32(Request.Params["hf"]);
+        UploadControlExtension.GetUploadedFiles("uc", null, (s,e) => {
+            var name = e.UploadedFile.FileName;
+            e.CallbackData = name;
+    
+            if (Helper.Files.ContainsKey(visibleIndex))
+                Helper.Files[visibleIndex] = e.UploadedFile.FileBytes;
+            else
+                Helper.Files.Add(visibleIndex, e.UploadedFile.FileBytes);
+        });
+        return null;
+    }
+    ```
 
 Now you can access all the uploaded files in the batch action method. Clear the session storage after you have updated the files.
 
