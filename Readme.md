@@ -100,7 +100,7 @@ Now you can access all the uploaded files in the batch action method. Clear the 
 * [ASPxGridView - Batch Edit - How to use the upload control in Batch Edit mode](https://github.com/DevExpress-Examples/aspxgridview-batch-edit-how-to-use-the-upload-control-in-batch-edit-mode-t191652)
 
 <!-- feedback -->
-## Does This Example Address Your Development Requirements/Objectives?
+## Does this example address your development requirements/objectives?
 
 [<img src="https://www.devexpress.com/support/examples/i/yes-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=asp-net-mvc-grid-use-upload-control-in-batch-edit-mode&~~~was_helpful=yes) [<img src="https://www.devexpress.com/support/examples/i/no-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=asp-net-mvc-grid-use-upload-control-in-batch-edit-mode&~~~was_helpful=no)
 
